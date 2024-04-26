@@ -1,0 +1,40 @@
+#include <iostream>
+#include <vector>
+#include <memory>
+
+struct Student {
+    int id;
+    std::string name;
+    int age;
+};
+
+class StudentDatabase {
+private:
+    std::vector<std::shared_ptr<Student>> students; 
+public:
+    void addStudent(int id, const std::string& name, int age) {
+        std::shared_ptr<Student> newStudent = std::make_shared<Student>(Student{id, name, age});
+        students.push_back(newStudent);
+    }
+    void removeStudent(int id) {
+        auto it = std::find_if(students.begin(), students.end(), [id](const std::shared_ptr<Student>& student) {
+            return student->id == id;
+        });
+        if (it != students.end()) {
+            students.erase(it);
+            std::cout << "Student ID " << id << " has been removed from the database." << std::endl;
+        } else {
+            std::cout << "Student ID " << id << " not found." << std::endl;
+        }
+    }
+    void findStudent(int id) {
+        auto it = std::find_if(students.begin(), students.end(), [id](const std::shared_ptr<Student>& student) {
+            return student->id == id;
+        });
+        if (it != students.end()) {
+            std::cout << "Student ID: " << (*it)->id << ", Name: " << (*it)->name << ", Age: " << (*it)->age << std::endl;
+        } else {
+            std::cout << "Student ID " << id << " not found." << std::endl;
+        }
+    }
+};
